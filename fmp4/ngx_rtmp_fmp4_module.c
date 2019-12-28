@@ -115,10 +115,10 @@ static ngx_rtmp_fmp4_frag_t * ngx_rtmp_fmp4_get_frag(ngx_rtmp_session_t *s, ngx_
 static void ngx_rtmp_fmp4_close_fragment(ngx_rtmp_session_t *s, ngx_rtmp_fmp4_track_t *t);
 static void ngx_rtmp_fmp4_write_data(ngx_rtmp_session_t *s,  ngx_rtmp_fmp4_track_t *vt,  ngx_rtmp_fmp4_track_t *at);
 static ngx_int_t ngx_rtmp_fmp4_rename_file(u_char *src, u_char *dst);
-static ngx_int_t ngx_rtmp_fmp4_parse_aac_header(ngx_rtmp_session_t *s, ngx_uint_t *objtype,
-    ngx_uint_t *srindex, ngx_uint_t *chconf);
-static ngx_int_t ngx_rtmp_fmp4_copy(ngx_rtmp_session_t *s, void *dst, u_char **src, size_t n,
-    ngx_chain_t **in);
+// static ngx_int_t ngx_rtmp_fmp4_parse_aac_header(ngx_rtmp_session_t *s, ngx_uint_t *objtype,
+//     ngx_uint_t *srindex, ngx_uint_t *chconf);
+// static ngx_int_t ngx_rtmp_fmp4_copy(ngx_rtmp_session_t *s, void *dst, u_char **src, size_t n,
+//     ngx_chain_t **in);
 static uint64_t
 ngx_rtmp_fmp4_get_fragment_id(ngx_rtmp_session_t *s, uint64_t ts);
 static ngx_int_t ngx_rtmp_fmp4_cleanup_dir(ngx_str_t *ppath, ngx_msec_t playlen);
@@ -436,12 +436,12 @@ ngx_rtmp_fmp4_write_data(ngx_rtmp_session_t *s,  ngx_rtmp_fmp4_track_t *vt,  ngx
     u_char                          *pos, *pos1;
     ngx_rtmp_fmp4_last_sample_trun  *truns;
     uint64_t                        id;
-    ngx_rtmp_fmp4_app_conf_t        *facf;
+    // ngx_rtmp_fmp4_app_conf_t        *facf;
     ngx_rtmp_fmp4_frag_t            *f;
     
 
     ctx = ngx_rtmp_get_module_ctx(s, ngx_rtmp_fmp4_module); 
-    facf = ngx_rtmp_get_module_app_conf(s, ngx_rtmp_fmp4_module);
+    // facf = ngx_rtmp_get_module_app_conf(s, ngx_rtmp_fmp4_module);
     //we need to choose a naming for fragments
     //we collect it each current frag
     f = ngx_rtmp_fmp4_get_frag(s, ctx->nfrags);   
@@ -533,11 +533,10 @@ ngx_rtmp_fmp4_write_data(ngx_rtmp_session_t *s,  ngx_rtmp_fmp4_track_t *vt,  ngx
         aleft -= n;
     }
     done:
-
         if (fd != NGX_INVALID_FILE) {
             ngx_close_file(fd);
         }      
-        ctx->last_sample_trun =   truns;
+        // ctx->last_sample_trun =   truns;
 }
 
 static ngx_int_t 
@@ -966,13 +965,13 @@ ngx_rtmp_fmp4_open_fragment(ngx_rtmp_session_t *s, ngx_rtmp_fmp4_track_t *t,
     ngx_uint_t id, char type, uint32_t timestamp){
     ngx_rtmp_fmp4_ctx_t   *ctx;
     ngx_rtmp_fmp4_frag_t      *f;
-    ngx_rtmp_fmp4_app_conf_t *facf;
+    // ngx_rtmp_fmp4_app_conf_t *facf;
 
     if (t->opened) {
         return NGX_OK;
     }
     ctx = ngx_rtmp_get_module_ctx(s, ngx_rtmp_fmp4_module);
-    facf = ngx_rtmp_conf_get_module_app_conf(s, ngx_rtmp_fmp4_module);
+    // facf = ngx_rtmp_conf_get_module_app_conf(s, ngx_rtmp_fmp4_module);
     *ngx_sprintf(ctx->stream.data + ctx->stream.len, "raw.m4%c", type) = 0;
 
     t->fd = ngx_open_file(ctx->stream.data, NGX_FILE_RDWR,
@@ -1029,116 +1028,116 @@ ngx_rtmp_fmp4_rename_file(u_char *src, u_char *dst){
 }
 
 
-static ngx_int_t
-ngx_rtmp_fmp4_parse_aac_header(ngx_rtmp_session_t *s, ngx_uint_t *objtype,
-    ngx_uint_t *srindex, ngx_uint_t *chconf)
-{
-    ngx_rtmp_codec_ctx_t   *codec_ctx;
-    ngx_chain_t            *cl;
-    u_char                 *p, b0, b1;
+// static ngx_int_t
+// ngx_rtmp_fmp4_parse_aac_header(ngx_rtmp_session_t *s, ngx_uint_t *objtype,
+//     ngx_uint_t *srindex, ngx_uint_t *chconf)
+// {
+//     ngx_rtmp_codec_ctx_t   *codec_ctx;
+//     ngx_chain_t            *cl;
+//     u_char                 *p, b0, b1;
 
-    codec_ctx = ngx_rtmp_get_module_ctx(s, ngx_rtmp_codec_module);
+//     codec_ctx = ngx_rtmp_get_module_ctx(s, ngx_rtmp_codec_module);
 
-    cl = codec_ctx->aac_header;
+//     cl = codec_ctx->aac_header;
 
-    p = cl->buf->pos;
+//     p = cl->buf->pos;
 
-    if (ngx_rtmp_fmp4_copy(s, NULL, &p, 2, &cl) != NGX_OK) {
-        return NGX_ERROR;
-    }
+//     if (ngx_rtmp_fmp4_copy(s, NULL, &p, 2, &cl) != NGX_OK) {
+//         return NGX_ERROR;
+//     }
 
-    if (ngx_rtmp_fmp4_copy(s, &b0, &p, 1, &cl) != NGX_OK) {
-        return NGX_ERROR;
-    }
+//     if (ngx_rtmp_fmp4_copy(s, &b0, &p, 1, &cl) != NGX_OK) {
+//         return NGX_ERROR;
+//     }
 
-    if (ngx_rtmp_fmp4_copy(s, &b1, &p, 1, &cl) != NGX_OK) {
-        return NGX_ERROR;
-    }
+//     if (ngx_rtmp_fmp4_copy(s, &b1, &p, 1, &cl) != NGX_OK) {
+//         return NGX_ERROR;
+//     }
 
-    *objtype = b0 >> 3;
-    if (*objtype == 0 || *objtype == 0x1f) {
-        ngx_log_debug1(NGX_LOG_DEBUG_RTMP, s->connection->log, 0,
-                       "fmp4: unsupported adts object type:%ui", *objtype);
-        return NGX_ERROR;
-    }
+//     *objtype = b0 >> 3;
+//     if (*objtype == 0 || *objtype == 0x1f) {
+//         ngx_log_debug1(NGX_LOG_DEBUG_RTMP, s->connection->log, 0,
+//                        "fmp4: unsupported adts object type:%ui", *objtype);
+//         return NGX_ERROR;
+//     }
 
-    if (*objtype > 4) {
+//     if (*objtype > 4) {
 
-        /*
-         * Mark all extended profiles as LC
-         * to make Android as happy as possible.
-         */
+//         /*
+//          * Mark all extended profiles as LC
+//          * to make Android as happy as possible.
+//          */
 
-        *objtype = 2;
-    }
+//         *objtype = 2;
+//     }
 
-    *srindex = ((b0 << 1) & 0x0f) | ((b1 & 0x80) >> 7);
-    if (*srindex == 0x0f) {
-        ngx_log_debug1(NGX_LOG_DEBUG_RTMP, s->connection->log, 0,
-                       "fmp4: unsupported adts sample rate:%ui", *srindex);
-        return NGX_ERROR;
-    }
+//     *srindex = ((b0 << 1) & 0x0f) | ((b1 & 0x80) >> 7);
+//     if (*srindex == 0x0f) {
+//         ngx_log_debug1(NGX_LOG_DEBUG_RTMP, s->connection->log, 0,
+//                        "fmp4: unsupported adts sample rate:%ui", *srindex);
+//         return NGX_ERROR;
+//     }
 
-    *chconf = (b1 >> 3) & 0x0f;
+//     *chconf = (b1 >> 3) & 0x0f;
 
-    ngx_log_debug3(NGX_LOG_DEBUG_RTMP, s->connection->log, 0,
-                   "fmp4: aac object_type:%ui, sample_rate_index:%ui, "
-                   "channel_config:%ui", *objtype, *srindex, *chconf);
+//     ngx_log_debug3(NGX_LOG_DEBUG_RTMP, s->connection->log, 0,
+//                    "fmp4: aac object_type:%ui, sample_rate_index:%ui, "
+//                    "channel_config:%ui", *objtype, *srindex, *chconf);
 
-    return NGX_OK;
-}
+//     return NGX_OK;
+// }
 
 
-static ngx_int_t
-ngx_rtmp_fmp4_copy(ngx_rtmp_session_t *s, void *dst, u_char **src, size_t n,
-    ngx_chain_t **in)
-{
-    u_char  *last;
-    size_t   pn;
+// static ngx_int_t
+// ngx_rtmp_fmp4_copy(ngx_rtmp_session_t *s, void *dst, u_char **src, size_t n,
+//     ngx_chain_t **in)
+// {
+//     u_char  *last;
+//     size_t   pn;
 
-    if (*in == NULL) {
-        return NGX_ERROR;
-    }
+//     if (*in == NULL) {
+//         return NGX_ERROR;
+//     }
 
-    for ( ;; ) {
-        last = (*in)->buf->last;
+//     for ( ;; ) {
+//         last = (*in)->buf->last;
 
-        if ((size_t)(last - *src) >= n) {
-            if (dst) {
-                ngx_memcpy(dst, *src, n);
-            }
+//         if ((size_t)(last - *src) >= n) {
+//             if (dst) {
+//                 ngx_memcpy(dst, *src, n);
+//             }
 
-            *src += n;
+//             *src += n;
 
-            while (*in && *src == (*in)->buf->last) {
-                *in = (*in)->next;
-                if (*in) {
-                    *src = (*in)->buf->pos;
-                }
-            }
+//             while (*in && *src == (*in)->buf->last) {
+//                 *in = (*in)->next;
+//                 if (*in) {
+//                     *src = (*in)->buf->pos;
+//                 }
+//             }
 
-            return NGX_OK;
-        }
+//             return NGX_OK;
+//         }
 
-        pn = last - *src;
+//         pn = last - *src;
 
-        if (dst) {
-            ngx_memcpy(dst, *src, pn);
-            dst = (u_char *)dst + pn;
-        }
+//         if (dst) {
+//             ngx_memcpy(dst, *src, pn);
+//             dst = (u_char *)dst + pn;
+//         }
 
-        n -= pn;
-        *in = (*in)->next;
+//         n -= pn;
+//         *in = (*in)->next;
 
-        if (*in == NULL) {
-            ngx_log_error(NGX_LOG_ERR, s->connection->log, 0,
-                          "fmp4: failed to read %uz byte(s)", n);
-            return NGX_ERROR;
-        }
+//         if (*in == NULL) {
+//             ngx_log_error(NGX_LOG_ERR, s->connection->log, 0,
+//                           "fmp4: failed to read %uz byte(s)", n);
+//             return NGX_ERROR;
+//         }
 
-        *src = (*in)->buf->pos;
-    }
-}
+//         *src = (*in)->buf->pos;
+//     }
+// }
 
 static uint64_t
 ngx_rtmp_fmp4_get_fragment_id(ngx_rtmp_session_t *s, uint64_t ts)
@@ -1192,7 +1191,7 @@ static ngx_int_t ngx_rtmp_fmp4_cleanup_dir(ngx_str_t *ppath, ngx_msec_t playlen)
     ngx_err_t        err;
     ngx_str_t        name, spath;
     ngx_int_t        nentries, nerased;
-    ngx_file_info_t  fi;
+    // ngx_file_info_t  fi;
 
     ngx_log_debug2(NGX_LOG_DEBUG_RTMP, ngx_cycle->log, 0,
                    "fmp4: cleanup path='%V' playlen=%M", ppath, playlen);
