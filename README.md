@@ -2,15 +2,14 @@
 ## nginx-rtmp-module
 
 ### Notice
-We fork this project for internal using.
-Now, we need to publish some internal feature for opensource community.
+I fork this project for studing
+Now, I need to publish some studing feature for opensource community.
 
-For pulling request, please contact me `<ducla@uiza.io>`
+For pulling request, please contact me `<ducla@live.com>`
 
 For updating new features/fixing bugs detail, please see RELEASE_NOTE.txt
 
-### Our homepage
-https://uiza.io
+
 
 ### Project blog
 
