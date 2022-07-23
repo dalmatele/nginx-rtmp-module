@@ -5,7 +5,7 @@
 I fork this project for studing
 Now, I need to publish some studing feature for opensource community.
 
-For pulling request, please contact me `<ducla@live.com>`
+For pulling request, please contact me `<ducla@outlook.com>`
 
 For updating new features/fixing bugs detail, please see RELEASE_NOTE.txt
 
@@ -17,7 +17,6 @@ For updating new features/fixing bugs detail, please see RELEASE_NOTE.txt
 
 ### Wiki manual
 
-  https://github.com/uizaio/nginx-rtmp-module/wiki/Directives
 
 ### Donation page (Paypal etc)
 
